@@ -137,3 +137,28 @@ if criticos:
     }
     correo = env['mail.mail'].create(valores_correo)
     correo.send()
+
+```
+
+---
+
+## 🛡️ Motor de Reglas de Negocio, Webhooks y Control Financiero en Odoo ERP (Python ORM)
+
+Implementación de 15 reglas de automatización (`base.automation` / Server Actions) mediante ejecución de código Python para blindar la operación comercial, logística, multimoneda y contable del ERP:
+
+![Reglas de Automatización en Odoo - Parte 1](./reglas_odoo_1.png)
+![Reglas de Automatización en Odoo - Parte 2](./reglas_odoo_2.png)
+
+* **Integración Multimoneda y Webhooks (`res.currency` / `sale.order`):**
+  * **Recibir tasa BCV desde n8n:** Recepción automática de la tasa oficial mediante Webhook externo conectado a n8n para sincronizar el tipo de cambio.
+  * **Actualizar tasa de cambio y precios automáticamente:** Recálculo dinámico en cotizaciones y actualización en vivo en la interfaz (`onchange`) al cambiar la lista de precios.
+* **Blindaje Contable, Pagos y Comisiones (`account.move` / `account.payment`):**
+  * **Retener y Liberar Comisión según Cobranza:** Lógica sobre asientos contables que retiene la comisión en facturas a crédito y la libera al confirmar el estado de pago.
+  * **Bloquear factura si hay entregas pendientes:** Restricción contable que impide generar asientos de facturación sin entregas validadas.
+  * **Prohibir a ventas registrar pagos:** Segregación de funciones para restringir el registro de cobros al área administrativa.
+* **Trazabilidad de Inventario y Lectura QR (`product.template` / `stock.picking`):**
+  * **Blindar Seriales por Categoría y Bloquear Validación sin Serial:** Exigencia automática de seriales por categoría y bloqueo de transferencias sin seriales registrados.
+  * **Procesar QR Masivo en Albarán y Campo Responsable:** Lectura por lotes mediante códigos QR en transferencias y asignación automática de responsable al crear el registro.
+* **Control Comercial y Validación Fiscal (`sale.order` / `res.partner`):**
+  * **No vender sin inventario y Bloqueo directo en Orden de Venta:** Validación preventiva de stock disponible y control del cliente al crear o editar órdenes de venta.
+  * **Validar formato de Cédula / RIF y datos obligatorios:** Verificación estricta de identificación fiscal en contactos y pedidos antes de avanzar de estado.
